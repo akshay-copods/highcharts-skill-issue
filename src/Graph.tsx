@@ -23,6 +23,16 @@ export function WidgetStackBarGraph(props: BarStackProps) {
     timezone: tz,
   } = props;
   const chartRef = useRef(null);
+  const options: Highcharts.Options = {
+    title: {
+        text: 'My chart'
+
+    },
+    series: [{
+        type: 'line',
+        data: [1, 2, 3]
+    }]
+};
   const chartOptions = useMemo(
     () => ({
       time: {
@@ -50,7 +60,7 @@ export function WidgetStackBarGraph(props: BarStackProps) {
         visible: false
       },
       legend: {
-        reversed: true,
+        reversed: false,
         enabled: true,
         align: "right",
         verticalAlign: "middle",
