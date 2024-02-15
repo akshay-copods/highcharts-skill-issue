@@ -63,19 +63,11 @@ export function WidgetStackBarGraph(props: BarStackProps) {
         margin: 0,
         symbolRadius: 2,
         padding: 0,
-
-        labelFormatter: function() {
-          if (this.data.every(point => point.y === 0)) {
-            return '<span style="color: #ccc; pointer-events: none;">' + this.name + '</span>';
-          } else {
-            return this.name;
-          }}
         
       },
 
       plotOptions: {
         series: {
-
           stacking: "normal",
           borderWidth: 2,
           pointWidth: 15,
@@ -104,14 +96,33 @@ export function WidgetStackBarGraph(props: BarStackProps) {
       exporting: {
         enabled: false
       },
+      
       tooltip: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: function (this: any) {
           return `<strong>${this.series.name}:</strong> ${this.y}`;
         }
       },
-      series: data
+      series: data.map(series => {
+        const allZeros = series.data.every(point => point === 0);
+        return {
+          ...series,
+          showInLegend: true,
+          // Change the series color if all data points are zero
+          color: allZeros ? '#ccc' : series.color,
+          events: {
+            legendItemClick: function() {
+              // Disable click if all data points are zero
+              if (allZeros) {
+                return false; // Prevent the default click action
+              }
+              // You can add else if you want to handle the click event for non-zero series
+            }
+          },
+        };
+      })
     }),
+    
     [data, tz]
   );
 
