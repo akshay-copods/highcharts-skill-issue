@@ -23,33 +23,26 @@ export function WidgetStackBarGraph(props: BarStackProps) {
     timezone: tz,
   } = props;
   const chartRef = useRef(null);
-  const options: Highcharts.Options = {
-    title: {
-        text: 'My chart'
 
-    },
-    series: [{
-        type: 'line',
-        data: [1, 2, 3]
-    }]
-};
-  const chartOptions = useMemo(
+  const chartOptions: Highcharts.Options = useMemo(
     () => ({
       time: {
         timezone: tz,
         moment: moment,
-        useUTC: false
+        useUTC: false,
+
+      
       },
       chart: {
         type: "bar",
+        height: 58,
 
-        height: 58
       },
       credits: {
         enabled: false
       },
       title: {
-        text: ""
+        text: "",
       },
       xAxis: {
         visible: false
@@ -69,19 +62,35 @@ export function WidgetStackBarGraph(props: BarStackProps) {
         lineHeight: 12,
         margin: 0,
         symbolRadius: 2,
-        padding: 0
+        padding: 0,
+
+        labelFormatter: function() {
+          if (this.data.every(point => point.y === 0)) {
+            return '<span style="color: #ccc; pointer-events: none;">' + this.name + '</span>';
+          } else {
+            return this.name;
+          }}
+        
       },
+
       plotOptions: {
         series: {
+
           stacking: "normal",
           borderWidth: 2,
           pointWidth: 15,
-          // borderRadius: {
-          //   radius: 6
-          // },
           borderRadiusTopLeft: "50%",
           borderRadiusTopRight: "50%",
           dataLabels: {
+            formatter: function() {
+              // Check if the point's value is 0
+              if (this.y === 0) {
+                // Return false to not display the label
+                return ;
+              } else {
+                // Return the default label text
+                return this.y;
+              }},
             enabled: true,
             align: "center",
             y: 20,

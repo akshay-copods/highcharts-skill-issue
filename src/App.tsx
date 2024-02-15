@@ -8,8 +8,9 @@ function App() {
   const DATA = [
     {
       name: "Highway9",
-      data: [35],
-      color: '#00FF00'
+      data: [0],
+      color: '#00FF00',
+      
     },
     {
       name: "Verizon",
